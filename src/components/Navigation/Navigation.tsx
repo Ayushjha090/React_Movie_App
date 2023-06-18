@@ -50,7 +50,16 @@ const Navigation = (props: Props): JSX.Element => {
   };
 
   return (
-    <Paper sx={{ height: '20vh' }} elevation={3}>
+    <Paper
+      sx={{
+        height: '20vh',
+        width: '100%',
+        position: 'sticky',
+        top: 0,
+        zIndex: 2,
+      }}
+      elevation={3}
+    >
       <Grid container sx={{ height: '50%' }}>
         <Grid
           item
