@@ -1,11 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import Navigation from './components/Navigation';
+import Navigation from './components/Navigation/Navigation';
+import './index.css';
 
 const App = (): JSX.Element => {
+  const [navigationTile, setNavigationTile] = useState<string>('home');
+
   return (
-    <div className="App">
-      <Navigation />
+    <div>
+      <Navigation
+        activeNavigation={navigationTile}
+        changeActiveNavigation={setNavigationTile}
+      />
     </div>
   );
 };
