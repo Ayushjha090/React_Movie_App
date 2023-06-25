@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Importing custom components and functions
 import type Movie from '../../types/movieType';
@@ -12,6 +12,43 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
 const MovieCard = ({ movie }: { movie: Movie }): JSX.Element => {
+  const [favorites, setFavorites] = useState<Set<string>>(new Set<string>([]));
+
+  const getStoredFavorites: () => string[] = () => {
+    let storedFavorites: string[];
+    try {
+      storedFavorites =
+        localStorage.getItem('favorites') !== null
+          ? JSON.parse(localStorage.getItem('favorites') as string)
+          : [];
+    } catch (error) {
+      storedFavorites = [];
+    }
+
+    return storedFavorites;
+  };
+
+  useEffect(() => {
+    if (localStorage.getItem('favorites') === null) {
+      return;
+    }
+
+    const storedFavorites = getStoredFavorites();
+
+    setFavorites(new Set<string>(storedFavorites));
+  }, []);
+
+  const handleFavorite: (data: string) => void = (movieID: string) => {
+    const storedFavorites = getStoredFavorites();
+    setFavorites((prevFavorites) => {
+      localStorage.setItem(
+        'favorites',
+        JSON.stringify([...storedFavorites, movieID])
+      );
+      return new Set<string>([...prevFavorites, movieID]);
+    });
+  };
+
   return (
     <Card
       sx={{
@@ -39,7 +76,15 @@ const MovieCard = ({ movie }: { movie: Movie }): JSX.Element => {
         <Typography variant="body2">{movie.Plot}</Typography>
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Typography>Year - {movie.Year}</Typography>
-          <Button variant="outlined">Favourite</Button>
+          <Button
+            color="error"
+            variant={favorites.has(movie.imdbID) ? 'contained' : 'outlined'}
+            onClick={() => {
+              handleFavorite(movie.imdbID);
+            }}
+          >
+            Favourite
+          </Button>
         </Box>
       </CardContent>
     </Card>
