@@ -12,7 +12,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
 const MovieCard = ({ movie }: { movie: Movie }): JSX.Element => {
-  const [favorites, setFavorites] = useState<string[]>([]);
+  const [favorites, setFavorites] = useState<Set<string>>(new Set<string>([]));
 
   const getStoredFavorites: () => string[] = () => {
     let storedFavorites: string[];
@@ -35,7 +35,7 @@ const MovieCard = ({ movie }: { movie: Movie }): JSX.Element => {
 
     const storedFavorites = getStoredFavorites();
 
-    setFavorites(storedFavorites);
+    setFavorites(new Set<string>(storedFavorites));
   }, []);
 
   const handleFavorite: (data: string) => void = (movieID: string) => {
@@ -45,7 +45,7 @@ const MovieCard = ({ movie }: { movie: Movie }): JSX.Element => {
         'favorites',
         JSON.stringify([...storedFavorites, movieID])
       );
-      return [...prevFavorites, movieID];
+      return new Set<string>([...prevFavorites, movieID]);
     });
   };
 
@@ -78,9 +78,7 @@ const MovieCard = ({ movie }: { movie: Movie }): JSX.Element => {
           <Typography>Year - {movie.Year}</Typography>
           <Button
             color="error"
-            variant={
-              favorites.includes(movie.imdbID) ? 'contained' : 'outlined'
-            }
+            variant={favorites.has(movie.imdbID) ? 'contained' : 'outlined'}
             onClick={() => {
               handleFavorite(movie.imdbID);
             }}
