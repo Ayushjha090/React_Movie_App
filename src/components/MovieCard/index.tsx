@@ -49,6 +49,13 @@ const MovieCard = ({ movie }: { movie: Movie }): JSX.Element => {
     });
   };
 
+  const handleRemoveFavorite: (data: string) => void = (movieID: string) => {
+    let storedFavorites = getStoredFavorites();
+    storedFavorites = storedFavorites.filter((id: string) => id !== movieID);
+    localStorage.setItem('favorites', JSON.stringify([...storedFavorites]));
+    setFavorites(new Set<string>([...storedFavorites]));
+  };
+
   return (
     <Card
       sx={{
@@ -76,15 +83,27 @@ const MovieCard = ({ movie }: { movie: Movie }): JSX.Element => {
         <Typography variant="body2">{movie.Plot}</Typography>
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Typography>Year - {movie.Year}</Typography>
-          <Button
-            color="error"
-            variant={favorites.has(movie.imdbID) ? 'contained' : 'outlined'}
-            onClick={() => {
-              handleFavorite(movie.imdbID);
-            }}
-          >
-            Favourite
-          </Button>
+          {favorites.has(movie.imdbID) ? (
+            <Button
+              color="error"
+              variant="contained"
+              onClick={() => {
+                handleRemoveFavorite(movie.imdbID);
+              }}
+            >
+              Remove from favorites
+            </Button>
+          ) : (
+            <Button
+              color="error"
+              variant="outlined"
+              onClick={() => {
+                handleFavorite(movie.imdbID);
+              }}
+            >
+              Add to favorites
+            </Button>
+          )}
         </Box>
       </CardContent>
     </Card>

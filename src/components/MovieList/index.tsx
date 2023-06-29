@@ -7,7 +7,13 @@ import MovieCard from '../MovieCard';
 // Importing Material UI Components
 import Typography from '@mui/material/Typography';
 
-const MovieList = ({ movies }: { movies: Movie[] }): JSX.Element => {
+const MovieList = ({
+  movies,
+  setMovies,
+}: {
+  movies: Movie[];
+  setMovies: (data: Movie[]) => void;
+}): JSX.Element => {
   return (
     <div
       style={{
