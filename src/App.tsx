@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 // Importing Custom Components, Functions and CSS
 import Navigation from './components/Navigation/Navigation';
 import Home from './components/Home/index';
+import Favorite from './components/Favorite';
 import './index.css';
 
 const App = (): JSX.Element => {
@@ -13,7 +14,7 @@ const App = (): JSX.Element => {
         activeNavigation={navigationTile}
         changeActiveNavigation={setNavigationTile}
       />
-      <Home />
+      {navigationTile === 'home' ? <Home /> : <Favorite />}
     </div>
   );
 };

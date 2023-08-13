@@ -18,9 +18,10 @@ const MovieList = ({
     <div
       style={{
         backgroundColor: '#f2f2f2',
-        height: '100%',
+        minHeight: '80vh',
         width: '100%',
         padding: '10px 0',
+        boxSizing: 'border-box',
       }}
     >
       {movies !== undefined && movies.length > 0 ? (
@@ -28,7 +29,9 @@ const MovieList = ({
           return <MovieCard key={index} movie={movie} />;
         })
       ) : (
-        <Typography variant="h6">No Movie is Avaialable</Typography>
+        <Typography variant="h6" align="center">
+          No Movie is Avaialable
+        </Typography>
       )}
     </div>
   );
