@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 
 // Importing custom components and functions
 import type Movie from '../../types/movieType';
+import { getStoredFavorites } from '../../configs/helper';
+import favoriteContext from '../../context/favoriteContext';
 
 // Material UI Imports
 import Card from '@mui/material/Card';
@@ -11,32 +13,14 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
-const MovieCard = ({ movie }: { movie: Movie }): JSX.Element => {
-  const [favorites, setFavorites] = useState<Set<string>>(new Set<string>([]));
-
-  const getStoredFavorites: () => string[] = () => {
-    let storedFavorites: string[];
-    try {
-      storedFavorites =
-        localStorage.getItem('favorites') !== null
-          ? JSON.parse(localStorage.getItem('favorites') as string)
-          : [];
-    } catch (error) {
-      storedFavorites = [];
-    }
-
-    return storedFavorites;
-  };
-
-  useEffect(() => {
-    if (localStorage.getItem('favorites') === null) {
-      return;
-    }
-
-    const storedFavorites = getStoredFavorites();
-
-    setFavorites(new Set<string>(storedFavorites));
-  }, []);
+const MovieCard = ({
+  movie,
+  handleRemoveFavorite,
+}: {
+  movie: Movie;
+  handleRemoveFavorite: (data: string) => void;
+}): JSX.Element => {
+  const { favorites, setFavorites } = useContext(favoriteContext);
 
   const handleFavorite: (data: string) => void = (movieID: string) => {
     const storedFavorites = getStoredFavorites();
@@ -76,15 +60,27 @@ const MovieCard = ({ movie }: { movie: Movie }): JSX.Element => {
         <Typography variant="body2">{movie.Plot}</Typography>
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Typography>Year - {movie.Year}</Typography>
-          <Button
-            color="error"
-            variant={favorites.has(movie.imdbID) ? 'contained' : 'outlined'}
-            onClick={() => {
-              handleFavorite(movie.imdbID);
-            }}
-          >
-            Favourite
-          </Button>
+          {favorites.has(movie.imdbID) ? (
+            <Button
+              color="error"
+              variant="contained"
+              onClick={() => {
+                handleRemoveFavorite(movie.imdbID);
+              }}
+            >
+              Remove from favorites
+            </Button>
+          ) : (
+            <Button
+              color="error"
+              variant="outlined"
+              onClick={() => {
+                handleFavorite(movie.imdbID);
+              }}
+            >
+              Add to favorites
+            </Button>
+          )}
         </Box>
       </CardContent>
     </Card>

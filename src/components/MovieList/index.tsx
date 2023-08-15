@@ -7,22 +7,39 @@ import MovieCard from '../MovieCard';
 // Importing Material UI Components
 import Typography from '@mui/material/Typography';
 
-const MovieList = ({ movies }: { movies: Movie[] }): JSX.Element => {
+const MovieList = ({
+  movies,
+  setMovies,
+  handleRemove,
+}: {
+  movies: Movie[];
+  setMovies: (data: Movie[]) => void;
+  handleRemove: (data: string) => void;
+}): JSX.Element => {
   return (
     <div
       style={{
         backgroundColor: '#f2f2f2',
-        height: '100%',
+        minHeight: '80vh',
         width: '100%',
         padding: '10px 0',
+        boxSizing: 'border-box',
       }}
     >
       {movies !== undefined && movies.length > 0 ? (
         movies.map((movie: Movie, index: number) => {
-          return <MovieCard key={index} movie={movie} />;
+          return (
+            <MovieCard
+              key={index}
+              movie={movie}
+              handleRemoveFavorite={handleRemove}
+            />
+          );
         })
       ) : (
-        <Typography variant="h6">No Movie is Avaialable</Typography>
+        <Typography variant="h6" align="center">
+          No Movie is Avaialable
+        </Typography>
       )}
     </div>
   );
