@@ -1,44 +1,37 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 
 // Importing custom components, types and functions
 import type Movie from '../../types/movieType';
 import MovieList from '../MovieList';
+import favoriteContext from '../../context/favoriteContext';
+import { API_KEY } from '../../configs/helper';
 
 // Material UI Imports
 import CircularProgress from '@mui/material/CircularProgress';
 
-const getStoredFavorites: () => string[] = () => {
-  let storedFavorites: string[];
-  try {
-    storedFavorites =
-      localStorage.getItem('favorites') !== null
-        ? JSON.parse(localStorage.getItem('favorites') as string)
-        : [];
-  } catch (error) {
-    storedFavorites = [];
-  }
-
-  return storedFavorites;
-};
-
 const Favorite = (): JSX.Element => {
+  // Context
+  const { favorites } = useContext(favoriteContext);
+
+  // States
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
+  // Hooks
   useEffect(() => {
-    if (localStorage.getItem('favorites') === null) {
+    if (favorites === null || API_KEY === '') {
       return;
     }
 
-    const storedFavorites = getStoredFavorites();
+    const storedFavorites = Array.from(favorites);
     setLoading(true);
     setMovies([]);
     const fetchMovies: () => Promise<void> = async () => {
       try {
         const movieRequests = storedFavorites.map(async (movieId: string) => {
           const response = await axios.get(
-            `http://www.omdbapi.com/?i=${movieId}&apikey=51990a2e`
+            `http://www.omdbapi.com/?i=${movieId}&apiKey=${API_KEY}`
           );
           return {
             Title: response.data.Title,

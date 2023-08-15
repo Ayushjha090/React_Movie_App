@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 
 // Importing custom components and functions
 import type Movie from '../../types/movieType';
+import { getStoredFavorites } from '../../configs/helper';
+import favoriteContext from '../../context/favoriteContext';
 
 // Material UI Imports
 import Card from '@mui/material/Card';
@@ -12,31 +14,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
 const MovieCard = ({ movie }: { movie: Movie }): JSX.Element => {
-  const [favorites, setFavorites] = useState<Set<string>>(new Set<string>([]));
-
-  const getStoredFavorites: () => string[] = () => {
-    let storedFavorites: string[];
-    try {
-      storedFavorites =
-        localStorage.getItem('favorites') !== null
-          ? JSON.parse(localStorage.getItem('favorites') as string)
-          : [];
-    } catch (error) {
-      storedFavorites = [];
-    }
-
-    return storedFavorites;
-  };
-
-  useEffect(() => {
-    if (localStorage.getItem('favorites') === null) {
-      return;
-    }
-
-    const storedFavorites = getStoredFavorites();
-
-    setFavorites(new Set<string>(storedFavorites));
-  }, []);
+  const { favorites, setFavorites } = useContext(favoriteContext);
 
   const handleFavorite: (data: string) => void = (movieID: string) => {
     const storedFavorites = getStoredFavorites();
@@ -49,12 +27,12 @@ const MovieCard = ({ movie }: { movie: Movie }): JSX.Element => {
     });
   };
 
-  const handleRemoveFavorite: (data: string) => void = (movieID: string) => {
-    let storedFavorites = getStoredFavorites();
-    storedFavorites = storedFavorites.filter((id: string) => id !== movieID);
-    localStorage.setItem('favorites', JSON.stringify([...storedFavorites]));
-    setFavorites(new Set<string>([...storedFavorites]));
-  };
+  // const handleRemoveFavorite: (data: string) => void = (movieID: string) => {
+  //   let storedFavorites = getStoredFavorites();
+  //   storedFavorites = storedFavorites.filter((id: string) => id !== movieID);
+  //   localStorage.setItem('favorites', JSON.stringify([...storedFavorites]));
+  //   setFavorites(new Set<string>([...storedFavorites]));
+  // };
 
   return (
     <Card
@@ -88,7 +66,7 @@ const MovieCard = ({ movie }: { movie: Movie }): JSX.Element => {
               color="error"
               variant="contained"
               onClick={() => {
-                handleRemoveFavorite(movie.imdbID);
+                // handleRemoveFavorite(movie.imdbID);
               }}
             >
               Remove from favorites
