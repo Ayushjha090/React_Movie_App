@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 
 // Importing custom components, functions and types
 import MovieList from '../MovieList';
 import type Movie from '../../types/movieType';
+import favoriteContext from '../../context/favoriteContext';
 
 const Home = (): JSX.Element => {
+  // Context
+  const { favorites, setFavorites } = useContext(favoriteContext);
+
+  // States
   const [movies, setMovies] = useState<Movie[]>([
     {
       Title: 'Star Wars: Episode IV - A New Hope',
@@ -34,7 +39,24 @@ const Home = (): JSX.Element => {
         'https://m.media-amazon.com/images/M/MV5BOWZlMjFiYzgtMTUzNC00Y2IzLTk1NTMtZmNhMTczNTk0ODk1XkEyXkFqcGdeQXVyNTAyODkwOQ@@._V1_SX300.jpg',
     },
   ]);
-  return <MovieList movies={movies} setMovies={setMovies} />;
+
+  // Handler function for removing movie from favorites on home page
+  const handleRemoveFavoritesFromHome: (data: string) => void = (
+    movieId: string
+  ) => {
+    let storedFavorites = Array.from(favorites);
+    storedFavorites = storedFavorites.filter((id: string) => id !== movieId);
+    localStorage.setItem('favorites', JSON.stringify([...storedFavorites]));
+    setFavorites(new Set<string>([...storedFavorites]));
+  };
+
+  return (
+    <MovieList
+      movies={movies}
+      setMovies={setMovies}
+      handleRemove={handleRemoveFavoritesFromHome}
+    />
+  );
 };
 
 export default Home;

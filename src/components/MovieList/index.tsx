@@ -10,9 +10,11 @@ import Typography from '@mui/material/Typography';
 const MovieList = ({
   movies,
   setMovies,
+  handleRemove,
 }: {
   movies: Movie[];
   setMovies: (data: Movie[]) => void;
+  handleRemove: (data: string) => void;
 }): JSX.Element => {
   return (
     <div
@@ -26,7 +28,13 @@ const MovieList = ({
     >
       {movies !== undefined && movies.length > 0 ? (
         movies.map((movie: Movie, index: number) => {
-          return <MovieCard key={index} movie={movie} />;
+          return (
+            <MovieCard
+              key={index}
+              movie={movie}
+              handleRemoveFavorite={handleRemove}
+            />
+          );
         })
       ) : (
         <Typography variant="h6" align="center">

@@ -12,7 +12,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 const Favorite = (): JSX.Element => {
   // Context
-  const { favorites } = useContext(favoriteContext);
+  const { favorites, setFavorites } = useContext(favoriteContext);
 
   // States
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -55,6 +55,17 @@ const Favorite = (): JSX.Element => {
     });
   }, []);
 
+  // Function to remove favorite movies from state on favorites page
+  const handleRemoveFavorites: (data: string) => void = (movieId: string) => {
+    let storedFavorites = Array.from(favorites);
+    storedFavorites = storedFavorites.filter((id: string) => id !== movieId);
+    localStorage.setItem('favorites', JSON.stringify([...storedFavorites]));
+    setFavorites(new Set<string>([...storedFavorites]));
+    setMovies((prevMovies: Movie[]) => {
+      return prevMovies.filter((movie: Movie) => movie.imdbID !== movieId);
+    });
+  };
+
   return (
     <>
       {loading ? (
@@ -71,7 +82,11 @@ const Favorite = (): JSX.Element => {
           <CircularProgress />
         </div>
       ) : (
-        <MovieList movies={movies} setMovies={setMovies} />
+        <MovieList
+          movies={movies}
+          setMovies={setMovies}
+          handleRemove={handleRemoveFavorites}
+        />
       )}
     </>
   );

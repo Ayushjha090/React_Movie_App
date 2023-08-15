@@ -52,7 +52,7 @@ const Navigation = (props: Props): JSX.Element => {
   return (
     <Paper
       sx={{
-        height: '20vh',
+        minHeight: '20vh',
         width: '100%',
         position: 'sticky',
         top: 0,
@@ -60,7 +60,7 @@ const Navigation = (props: Props): JSX.Element => {
       }}
       elevation={3}
     >
-      <Grid container sx={{ height: '50%' }}>
+      <Grid container sx={{ minHeight: '10vh' }}>
         <Grid
           item
           xs={6}
@@ -101,7 +101,7 @@ const Navigation = (props: Props): JSX.Element => {
         </Grid>
       </Grid>
       <Divider variant="fullWidth" />
-      <Grid container sx={{ height: '50%' }}>
+      <Grid container sx={{ minHeight: '10vh' }}>
         <Grid
           item
           xs={1}

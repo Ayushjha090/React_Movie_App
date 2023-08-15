@@ -13,7 +13,13 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
-const MovieCard = ({ movie }: { movie: Movie }): JSX.Element => {
+const MovieCard = ({
+  movie,
+  handleRemoveFavorite,
+}: {
+  movie: Movie;
+  handleRemoveFavorite: (data: string) => void;
+}): JSX.Element => {
   const { favorites, setFavorites } = useContext(favoriteContext);
 
   const handleFavorite: (data: string) => void = (movieID: string) => {
@@ -26,13 +32,6 @@ const MovieCard = ({ movie }: { movie: Movie }): JSX.Element => {
       return new Set<string>([...prevFavorites, movieID]);
     });
   };
-
-  // const handleRemoveFavorite: (data: string) => void = (movieID: string) => {
-  //   let storedFavorites = getStoredFavorites();
-  //   storedFavorites = storedFavorites.filter((id: string) => id !== movieID);
-  //   localStorage.setItem('favorites', JSON.stringify([...storedFavorites]));
-  //   setFavorites(new Set<string>([...storedFavorites]));
-  // };
 
   return (
     <Card
@@ -66,7 +65,7 @@ const MovieCard = ({ movie }: { movie: Movie }): JSX.Element => {
               color="error"
               variant="contained"
               onClick={() => {
-                // handleRemoveFavorite(movie.imdbID);
+                handleRemoveFavorite(movie.imdbID);
               }}
             >
               Remove from favorites
